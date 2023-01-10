@@ -87,7 +87,7 @@
       <!--begin::Input group-->
       <div class="mb-5 fv-row">
         <label class="form-label fw-bolder text-dark fs-6">Confirm Password</label>
-        <input @keyup.enter="userRegister" class="form-control form-control-lg form-control-solid" type="password" placeholder="" name="confirm-password" autocomplete="off" />
+        <input v-model="register.confirmPassword" @keyup.enter="userRegister" class="form-control form-control-lg form-control-solid" type="password" placeholder="" name="confirm-password" autocomplete="off" />
       </div>
       <!--end::Input group-->
       <!--begin::Input group-->
@@ -125,21 +125,26 @@ export default {
         username: 'danixsofyannxx',
         email: 'dani@absen.id',
         password: '123qweasd',
+        confirmPassword: '123qweasd',
       },
     }
   },
   methods: {
     async userRegister() {
-      let response = await this.$axios.post('/api/v1/auth/register', this.register)
       try {
+        let response = await this.$axios.post('/api/v1/auth/register', this.register)
         console.log(response.data.data.token)
         this.$auth
           .setUserToken(response.data.data.token)
           .then(() => this.$router.push({ path: '/home' }))
-        alert('success');
+        Swal.fire('User successfully created!');
       } catch (err) {
-        if (err.response.data.code == 400) {
-          alert('asds')
+        console.log(err);
+        if (err.response.data.code == 500) {
+          alert(err);
+        } else {
+          // alert(err.response.data.message);
+          Swal.fire(err.response.data.message);
         }
       }
     },

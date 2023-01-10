@@ -90,9 +90,8 @@ export default {
       } catch (err) {
         console.log(err);
         if (err.response.data.code == 500) {
-          alert(err);
+          Swal.fire(err);
         } else {
-          // alert(err.response.data.message);
           Swal.fire(err.response.data.message);
         }
       }
